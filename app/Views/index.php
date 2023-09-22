@@ -22,11 +22,11 @@ $removeError = session()->getFlashdata('remove_error');
             <input type="hidden" name="id" value="<?= isset($val['id']) ? $val['id'] : '' ?>">
             <div class="mb-3">
                 <label for="StudName" class="form-label">Name</label>
-                <input type="text" class="form-control" id="StudName" name="StudName" placeholder="Enter your name" value="<?= isset($val['StudName']) ? $val['StudName'] : '' ?>">
+                <input type="text" class="form-control" id="StudName" name="StudName" placeholder="Enter your name" value="<?= isset($val['StudName']) ? $val['StudName'] : '' ?>" required>
             </div>
             <div class="mb-3">
                 <label for="StudGender" class="form-label">Gender</label>
-                <select class="form-select" id="StudGender" name="StudGender">
+                <select class="form-select" id="StudGender" name="StudGender" required>
                     <option value="" disabled selected>Select Gender</option>
                     <option value="Male" <?= (isset($val['StudGender']) && $val['StudGender'] == 'Male') ? 'selected' : '' ?>>Male</option>
                     <option value="Female" <?= (isset($val['StudGender']) && $val['StudGender'] == 'Female') ? 'selected' : '' ?>>Female</option>
@@ -35,7 +35,7 @@ $removeError = session()->getFlashdata('remove_error');
             </div>
             <div class="mb-3">
                 <label for="StudCourse" class="form-label">Course</label>
-                <select class="form-select" id="StudCourse" name="StudCourse">
+                <select class="form-select" id="StudCourse" name="StudCourse" required>
                     <option value="" disabled selected>Select Course</option>
                     <option value="BSIT" <?= (isset($val['StudCourse']) && $val['StudCourse'] == 'BSIT') ? 'selected' : '' ?>>BSIT</option>
                     <option value="BSCS" <?= (isset($val['StudCourse']) && $val['StudCourse'] == 'BSCS') ? 'selected' : '' ?>>BSCS</option>
@@ -44,7 +44,7 @@ $removeError = session()->getFlashdata('remove_error');
             </div>
             <div class="mb-3">
                 <label for="StudSection" class="form-label">Section</label>
-                <select class="form-select" id="StudSection" name="StudSection">
+                <select class="form-select" id="StudSection" name="StudSection" required>
                     <option value="" disabled selected>Select Section</option>
                     <?php foreach ($sections as $section): ?>
                         <option value="<?= $section['Section'] ?>" <?= (isset($val['StudSection']) && $val['StudSection'] == $section['Section']) ? 'selected' : '' ?>>
@@ -55,42 +55,35 @@ $removeError = session()->getFlashdata('remove_error');
             </div>
             <div class="mb-3">
                 <label for="StudYear" class="form-label">Year</label>
-                <input type="number" class="form-control" id="StudYear" name="StudYear" min="1" max="4" placeholder="Select your Year" value="<?= isset($val['StudYear']) ? $val['StudYear'] : '' ?>">
+                <input type="number" class="form-control" id="StudYear" name="StudYear" min="1" max="4" placeholder="Select your Year" value="<?= isset($val['StudYear']) ? $val['StudYear'] : '' ?>" required>
             </div>
             <button type="submit" class="btn btn-primary"><?= isset($action) ? $action : 'Insert' ?></button>
         </form>
     </div>
 
-    <div class="container mt-5">
-        <h1>Student Table</h1>
-        <table class="table table-bordered">
-            <thead class="head">
-                <tr>
-                    <th>Name</th>
-                    <th>Gender</th>
-                    <th>Course</th>
-                    <th>Section</th>
-                    <th>Year</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($students as $student): ?>
-                    <tr class="head">
-                        <td><?= $student['StudName']; ?></td>
-                        <td><?= $student['StudGender']; ?></td>
-                        <td><?= $student['StudCourse']; ?></td>
-                        <td><?= $student['StudSection']; ?></td>
-                        <td><?= $student['StudYear']; ?></td>
-                        <td class="icon-cell">
-                            <a href="/edit/<?= $student['id']; ?>"><i class="fa-solid fa-pen-to-square"></i></a> 
-                            <a href="/delete/<?= $student['id']; ?>"><i class="fa-solid fa-trash"></i></a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+    <div class="container mt-4">
+        <h1>Student List</h1>
+        <ul class="list-group">
+            <?php foreach ($students as $student): ?>
+                <li class="list-group-item">
+                    <div class="d-flex justify-content-between">
+                        <div class="student-info">
+                            <h5 class="mb-1"><?= $student['StudName']; ?></h5>
+                            <p class="mb-1">Gender: <?= $student['StudGender']; ?></p>
+                            <p class="mb-1">Course: <?= $student['StudCourse']; ?></p>
+                            <p class="mb-1">Section: <?= $student['StudSection']; ?></p>
+                            <p class="mb-1">Year: <?= $student['StudYear']; ?></p>
+                        </div>
+                        <div class="student-actions">
+                            <a href="/edit/<?= $student['id']; ?>" class="btn btn-primary btn-sm"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+                            <a href="/delete/<?= $student['id']; ?>" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</a>
+                        </div>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
     </div>
+
 
     <div class="container mt-5">
         <h1>Insert Section</h1>
@@ -106,26 +99,23 @@ $removeError = session()->getFlashdata('remove_error');
 
     <div class="container mt-5">
         <h1>Section List</h1>
-        <table class="table table-bordered">
-            <thead class="head">
-                <tr>
-                    <th>Section</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody class="head">
-                <?php foreach ($sections as $section): ?>
-                    <tr>
-                        <td><?= $section['Section']; ?></td>
-                        <td class="icon-cell">
-                            <a href="/editSection/<?= $section['Section']; ?>"><i class="fa-solid fa-pen-to-square"></i></a> 
-                            <a href="/remove/<?= $section['Section']; ?>"><i class="fa-solid fa-trash"></i></a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+        <ul class="list-group">
+            <?php foreach ($sections as $section): ?>
+                <li class="list-group-item">
+                    <div class="d-flex justify-content-between">
+                        <div class="section-info">
+                            <h5 class="mb-1"><?= $section['Section']; ?></h5>
+                        </div>
+                        <div class="section-actions">
+                            <a href="/editSection/<?= $section['Section']; ?>" class="btn btn-primary btn-sm"><i class="fa-solid fa-pen-to-square"></i> Edit</a>
+                            <a href="/remove/<?= $section['Section']; ?>" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i> Delete</a>
+                        </div>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
     </div>
+
 
     <?php if ($removeError): ?>
         <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
@@ -138,7 +128,7 @@ $removeError = session()->getFlashdata('remove_error');
                         </button>
                     </div>
                     <div class="modal-body">
-                        Cannot delete section with students.
+                        Cannot update/delete section with students.
                     </div>
                 </div>
             </div>

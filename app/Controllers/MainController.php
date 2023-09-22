@@ -47,10 +47,17 @@ class MainController extends BaseController
         $model = $modelType === 'student' ? $this->student : $this->section;
 
         $id = $this->request->getVar('id');
+        $studentsCount = $this->student->where('StudSection', $id)->countAllResults();
 
         if ($id) {
-            $model->update($id, $data);
-            $operation .= 'updated successfully.';
+            if($studentsCount > 0){
+                session()->setFlashdata('remove_error', true);
+                return redirect()->to(base_url(''));
+            }
+            else{
+                $model->update($id, $data);
+                $operation .= 'updated successfully.';
+            }
         } else {
             $model->insert($data);
             $operation .= 'added successfully.';
